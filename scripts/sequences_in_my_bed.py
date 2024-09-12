@@ -3,6 +3,7 @@ from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 import os.path
 from itertools import product
 from Bio import SeqIO
+from Bio.Seq import Seq
 from pybedtools import BedTool
 import sys
 
@@ -13,6 +14,8 @@ parser.add_argument("sequence", type=str, help="Your sequence")
 parser.add_argument("bed", type=str, help="Path to yor bed file with regions of interest")
 parser.add_argument("fasta", type=str, help="Path to reference fasta file")
 parser.add_argument("-t", "--input_type", type=str, help="Type of input file", default="bed")
+parser.add_argument("-d", "--double_strand", type=bool, help="Search with revers compliment string. Takse True or False.", default=True)
+
 
 
 args = vars(parser.parse_args())
@@ -48,9 +51,17 @@ def generate_combinations(input_string):
     return [''.join(combination) for combination in product(*options)]
 
 # Get all possible strings
-resulting_strings = generate_combinations(args['sequence'].upper())
-print("List of input sequences")
-print(resulting_strings)
+if args['double_strand']: # if you want to parse both strings
+    resulting_strings = generate_combinations(args['sequence'].upper())
+    resulting_strings.extend([str(Seq(seq.upper()).reverse_complement()) for seq in resulting_strings])
+    # remove duplicates in case your input contains mirror sequences
+    resulting_strings = list(set(resulting_strings))
+    print("List of input sequences")
+    print(resulting_strings)
+else:
+    resulting_strings = generate_combinations(args['sequence'].upper())
+    print("List of input sequences")
+    print(resulting_strings)
 
 # define function to generate bed with query sequence
 # that intersects with your bed regions
