@@ -85,12 +85,11 @@ for seq in resulting_strings:
     generate_bed(args['fasta'], seq)
 
 # intersect sequence beds
+print("Intersecting bed with sequences")
 if len(resulting_strings) > 1:
     seq_bed = BedTool(f"{resulting_strings[0]}.bed")
-    print(seq_bed)
     for bed in resulting_strings[1:]:
         bed_b = BedTool(f"{bed}.bed")
-        print(bed_b)
         seq_bed = seq_bed.cat(bed_b, postmerge=False)
         os.remove(f"{bed}.bed")
 elif len(resulting_strings) == 1:
