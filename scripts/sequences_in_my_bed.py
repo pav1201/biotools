@@ -85,8 +85,8 @@ for seq in resulting_strings:
     generate_bed(args['fasta'], seq)
 
 # intersect sequence beds
-print("Intersecting bed with sequences")
 if len(resulting_strings) > 1:
+    print("Intersecting sequence bed files")
     seq_bed = BedTool(f"{resulting_strings[0]}.bed")
     for bed in resulting_strings[1:]:
         bed_b = BedTool(f"{bed}.bed")
