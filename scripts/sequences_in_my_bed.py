@@ -11,8 +11,8 @@ import sys
 parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter,
                         description="Script to generate bed file with given sequences coordinates\nthat intersect with your target regions")
 parser.add_argument("sequence", type=str, help="Your sequence")
-parser.add_argument("bed", type=str, help="Path to yor bed file with regions of interest")
 parser.add_argument("fasta", type=str, help="Path to reference fasta file")
+parser.add_argument("-b", "bed", type=str, help="Path to yor bed file with regions of interest", default=None)
 parser.add_argument("-t", "--input_type", type=str, help="Type of input file", default="bed")
 parser.add_argument("-d", "--double_strand", type=bool, help="Search with revers compliment string. Takse True or False.", default=True)
 
@@ -90,22 +90,24 @@ if len(resulting_strings) > 1:
     seq_bed = BedTool(f"{resulting_strings[0]}.bed")
     for bed in resulting_strings[1:]:
         bed_b = BedTool(f"{bed}.bed")
-        seq_bed = seq_bed.cat(bed_b, postmerge=False)
+        seq_bed = seq_bed.cat(bed_b, postmerge=True)
         os.remove(f"{bed}.bed")
 elif len(resulting_strings) == 1:
     seq_bed = BedTool(f"{resulting_strings[0]}.bed")
 else:
     print("Something wrong")
 
-print("Intersecting reference and sequence beds")
-bed_regs_of_interest = BedTool(args['bed'])
-result = seq_bed.intersect(bed_regs_of_interest)
-
-file_prefix = os.path.basename(args['bed']).replace(f".{args['input_type']}", '')
-result.saveas(f"{file_prefix}_{args['sequence'].upper()}.bed")
-
-print("Your bed is ready")
-print(f"Head of final bed:")
-print(f"{result.head()}")
-
-os.remove(f"{resulting_strings[0]}.bed")
+if args['bed'] != None:
+    print("Intersecting reference and sequence beds")
+    bed_regs_of_interest = BedTool(args['bed'])
+    result = seq_bed.intersect(bed_regs_of_interest)
+    
+    file_prefix = os.path.basename(args['bed']).replace(f".{args['input_type']}", '')
+    result.saveas(f"{file_prefix}_{args['sequence'].upper()}.bed")
+    
+    print("Your bed intersection with sequences is ready")
+    print(f"Head of final bed:")
+    print(f"{result.head()}")
+else:
+    print("Your bed with sequences in genome is ready")
+    seq_bed.saveas(f"{args['sequence']}.bed")
