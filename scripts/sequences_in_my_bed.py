@@ -12,7 +12,7 @@ parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter,
                         description="Script to generate bed file with given sequences coordinates\nthat intersect with your target regions")
 parser.add_argument("sequence", type=str, help="Your sequence")
 parser.add_argument("fasta", type=str, help="Path to reference fasta file")
-parser.add_argument("-b", "bed", type=str, help="Path to yor bed file with regions of interest", default=None)
+parser.add_argument("-b", "--bed", type=str, help="Path to yor bed file with regions of interest", default=None)
 parser.add_argument("-t", "--input_type", type=str, help="Type of input file", default="bed")
 parser.add_argument("-d", "--double_strand", type=bool, help="Search with revers compliment string. Takse True or False.", default=True)
 
