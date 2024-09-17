@@ -104,7 +104,7 @@ if args['bed'] != None:
     
     file_prefix = os.path.basename(args['bed']).replace(f".{args['input_type']}", '')
     result.saveas(f"{file_prefix}_{args['sequence'].upper()}.bed")
-    
+    seq_bed.saveas(f"{args['sequence']}.bed")
     print("Your bed intersection with sequences is ready")
     print(f"Head of final bed:")
     print(f"{result.head()}")
