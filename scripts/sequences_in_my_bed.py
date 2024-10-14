@@ -111,4 +111,5 @@ if args['bed'] != None:
 else:
     print("Your bed with sequences in genome is ready")
     print(f"Head of Sequence bed:")
+    seq_bed.saveas(f"{args['sequence']}.bed")
     print(seq_bed.head())
